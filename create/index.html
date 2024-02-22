@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+</head>
+<body>
+    <form class="js-create-user-form">
+        <input  type="text" id="username" name="username">
+        <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+        const elForm = document.querySelector(".js-create-user-form")
+        const handleSub = async (evt) => {
+            evt.preventDefault()
+            const request = await fetch("http://10.10.3.3:1000/api/users", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username.value
+                })
+            })
+            if(request.status == 201){
+                const response = await request.json()
+                console.log(response)
+            }
+        }
+        elForm.addEventListener("submit", handleSub)
+    </script>
+</body>
+</html>

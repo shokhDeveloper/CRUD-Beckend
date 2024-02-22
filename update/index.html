@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form class="js-update-form-user">
+      <input type="text" id="username" />
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      console.log(window.location.href.split("/").pop());
+      const elForm = document.querySelector(".js-update-form-user");
+      const handleSub = async (evt) => {
+        evt.preventDefault();
+        const id = window.location.href.split("/").pop();
+
+        const req = await fetch(`http://10.10.3.3:1000/api/users/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username.value,
+          }),
+        });
+        const res = await req.json();
+        console.log(res);
+      };
+      elForm.addEventListener("submit", handleSub);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul class="list js-user-inner-list" id="list"></ul>
+
+    <script>
+      const elList = document.querySelector(".js-user-inner-list");
+      const handleRenderUser = (arr) => {
+        if (arr?.length) {
+            elList.innerHTML = ''
+          const userDocumentFragment = document.createDocumentFragment();
+          arr.map((item) => {
+            const elLi = document.createElement("li");
+            elLi.textContent = item.username;
+            const elButtonDelete = document.createElement("button");
+            (elButtonDelete.textContent = "Delete"),
+              elButtonDelete.classList.add("delete", "js-user-delete");
+            elButtonDelete.dataset.id = item.userId;
+            const elLinkUserUpdate = document.createElement("a")
+            elLinkUserUpdate.href = `/update/api/users/${item.userId}`
+            elLinkUserUpdate.textContent = "Yangilash"
+            elLi.appendChild(elLinkUserUpdate)
+            elLi.appendChild(elButtonDelete);
+            userDocumentFragment.appendChild(elLi);
+          });
+          elList.appendChild(userDocumentFragment);
+        }else{
+            elList.innerHTML = ''
+        }
+      };
+      const handleGetUser = async () => {
+        const request = await fetch("http://10.10.3.3:1000/api/users");
+        if (request.status == 200) {
+          const response = await request.json();
+          if (response.length) {
+            handleRenderUser(response);
+          }
+        }
+      };
+      elList.addEventListener("click", async (evt) => {
+        if (evt.target.matches(".js-user-delete")) {
+          const id = evt.target.dataset.id;
+          const req = await fetch(`http://10.10.3.3:1000/api/users/${id}`, {
+            method: "DELETE",
+          });
+          if(req.status == 200){
+              const res = await req.json();
+            console.log(res)
+              handleGetUser()
+            }
+        }
+      });
+      handleGetUser()
+    </script>
+  </body>
+</html>
